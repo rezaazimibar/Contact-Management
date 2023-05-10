@@ -1,11 +1,5 @@
-import {
-  CURRENTLINE,
-  ORANGE,
-  PURPLE,
-  CYAN,
-  RED,
-} from "../../helpers/color";
-const Contactt = () => {
+import { CURRENTLINE, ORANGE, PURPLE, CYAN, RED } from "../../helpers/color";
+const Contactt = ({ contact }) => {
   return (
     <div className="col-md-6">
       <div style={{ backgroundColor: CURRENTLINE }} className="card my-2">
@@ -13,8 +7,8 @@ const Contactt = () => {
           <div className="row align-items-center d-flex justify-content-around">
             <div className="col-md-4">
               <img
-                src="https://placekitten.com/640/360"
-                alt=""
+                src={contact.phot}
+                alt={contact.fullName}
                 style={{ border: `1px solid ${PURPLE}` }}
                 className="img-fluid rounded"
               />
@@ -22,13 +16,14 @@ const Contactt = () => {
             <div className="col-md-7">
               <ul className="list-group">
                 <li className="list-group-item list-group-item-dark">
-                  نام و نام خانوادگی: <span className="fw-bold">رضا عظیمی</span>
+                  نام و نام خانوادگی:{" "}
+                  <span className="fw-bold">{contact.fullName}</span>
                 </li>
                 <li className="list-group-item list-group-item-dark">
-                  شماره مبایل: <span className="fw-bold">01915815445</span>
+                  شماره مبایل: <span className="fw-bold">{contact.phone}</span>
                 </li>
                 <li className="list-group-item list-group-item-dark">
-                  آدرس ایمیل: <span className="fw-bold">www.gmail.com</span>
+                  آدرس ایمیل: <span className="fw-bold">{contact.email}</span>
                 </li>
               </ul>
             </div>
