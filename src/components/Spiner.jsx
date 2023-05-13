@@ -6,7 +6,7 @@ const Spinergif = () => {
         src={spinergif}
         alt="not found"
         className="d-block m-auto"
-        style={{ width: "200px" }}
+        style={{ width: "100px" }}
       />
     </>
   );

@@ -1,4 +1,5 @@
 import "./App.css";
+
 import { useState, useEffect } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import {
@@ -16,11 +17,12 @@ import {
 
 const App = () => {
   const [loading, setLoading] = useState(false);
+  const [forceRender, setForceRender] = useState(false);
   const [getCounts, setCount] = useState([]);
   const [getGroups, setGroups] = useState([]);
   const [getContact, setContact] = useState({
     fullName: "",
-    photo: "",
+    phot: "",
     mobile: "",
     email: "",
     job: "",
@@ -42,6 +44,21 @@ const App = () => {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const { data: contactData } = await getAllContacts();
+        const { data: groupData } = await getAllGroups();
+        setCount(contactData);
+        setGroups(groupData);
+        setLoading(false);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    fetchData();
+  }, [forceRender]);
   const createContactForm = async (event) => {
     event.preventDefault();
     try {
@@ -49,6 +66,7 @@ const App = () => {
       if (status === 201) {
         setContact({});
         navigate("/contacts");
+        setForceRender(!forceRender);
       }
     } catch (err) {
       console.log(err.message);
@@ -81,8 +99,11 @@ const App = () => {
             />
           }
         />
-        <Route path="/contacts/:contactId" element={<ViewContact />} />
-        <Route path="/contacts/edit/:contactId" element={<EditContact />} />
+        <Route
+          path="/contacts/:contactId"
+          element={<ViewContact   loading={loading} />}
+        />
+        <Route path="/contacts/edit/:contactId" element={<EditContact/>} />
       </Routes>
       {/* <Contact contacts={getCounts} loading={loading} /> */}
     </div>
