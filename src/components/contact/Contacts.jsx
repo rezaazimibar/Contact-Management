@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Spinergif from "../Spiner";
 import Contactt from "./Contact";
 // import notFound from '../../assests/noresult.gif'
-const Contact = ({ contacts, loading }) => {
+const Contact = ({ contacts, loading, confirmDelete }) => {
   return (
     <>
       <section className="container">
@@ -29,7 +29,13 @@ const Contact = ({ contacts, loading }) => {
         <section className="container">
           <div className="row">
             {contacts.length > 0 ? (
-              contacts.map((c) => <Contactt key={c.id} contact={c} />)
+              contacts.map((c) => (
+                <Contactt
+                  key={c.id}
+                  confirmDelete={() => confirmDelete(c.id, c.fullName)}
+                  contact={c}
+                />
+              ))
             ) : (
               <div
                 className="text-center  py-5"

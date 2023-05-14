@@ -56,7 +56,7 @@ const AddContact = ({
                     </div>
                     <div className="mb-2">
                       <input
-                        name="photo"
+                        name="phot"
                         value={contact.photo}
                         onChange={setContactInfo}
                         type="text"
@@ -67,7 +67,7 @@ const AddContact = ({
                     </div>
                     <div className="mb-2">
                       <input
-                        name="mobile"
+                        name="phone"
                         value={contact.number}
                         onChange={setContactInfo}
                         type="number"

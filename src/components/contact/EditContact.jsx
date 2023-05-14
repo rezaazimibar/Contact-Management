@@ -5,7 +5,7 @@ import { getContact, getAllGroups, updateContact } from "../urlService";
 import Spinergif from "../Spiner";
 import { COMMENT, ORANGE, PURPLE } from "../../helpers/color";
 
-const EditContact = () => {
+const EditContact = ({ forceRender, setForceRender }) => {
   const { contactId } = useParams();
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const EditContact = () => {
     contact: {
       name: "",
       phot: "",
-      mobile: "",
+      phone: "",
       email: "",
       group: "",
     },
@@ -57,6 +57,7 @@ const EditContact = () => {
       const { data } = await updateContact(state.contact, contactId);
       setState({ ...state, loading: false });
       if (data) {
+        setForceRender(!forceRender);
         navigate("/contacts");
       }
     } catch (err) {
@@ -111,10 +112,10 @@ const EditContact = () => {
                     </div>
                     <div className="mb-2">
                       <input
-                        name="mobile"
+                        name="phone"
                         type="number"
                         className="form-control"
-                        value={contact.mobile}
+                        value={contact.phone}
                         onChange={setContactUpdate}
                         required={true}
                         placeholder="شماره موبایل"
@@ -144,7 +145,7 @@ const EditContact = () => {
                     </div>
                     <div className="mb-2">
                       <select
-                      style={{ color: PURPLE }}
+                        style={{ color: PURPLE }}
                         name="group"
                         value={contact.group}
                         onChange={setContactUpdate}
@@ -156,7 +157,11 @@ const EditContact = () => {
                         </option>
                         {groups.length > 0 &&
                           groups.map((group) => (
-                            <option style={{ backgroundColor: PURPLE }} key={group.id} value={group.id}>
+                            <option
+                              style={{ backgroundColor: PURPLE }}
+                              key={group.id}
+                              value={group.id}
+                            >
                               {group.name}
                             </option>
                           ))}
@@ -181,6 +186,7 @@ const EditContact = () => {
                 </div>
                 <div className="col-md-4">
                   <img
+                    alt={contact.fullName}
                     src={contact.phot}
                     className="img-fluid rounded"
                     style={{ border: `1px solid ${PURPLE}` }}
@@ -191,6 +197,7 @@ const EditContact = () => {
 
             <div className="text-center mt-1">
               <img
+              alt="not found"
                 src={require("../../assests/manNoting.png")}
                 height="300px"
                 style={{ opacity: "60%" }}
