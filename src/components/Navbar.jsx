@@ -1,4 +1,5 @@
 import SearchContact from "./contact/searchContact";
+
 import { PURPLE, BACKGROUND } from "../helpers/color";
 const Navbar = () => {
   return (
@@ -10,12 +11,12 @@ const Navbar = () => {
         <div className="row w-100">
           <div className="col-6">
             <div className="navbar-brand">
-              <i className="fas fa-id-badge" style={{ color: PURPLE }}></i>{" "}
-              وب اپلیکیشن مدیرت <span style={{ color: PURPLE }}>مخاطبین</span>
+              <i className="fas fa-id-badge" style={{ color: PURPLE }}></i> وب
+              اپلیکیشن مدیرت <span style={{ color: PURPLE }}>مخاطبین</span>
             </div>
           </div>
           <div className="col">
-            <SearchContact />
+            <SearchContact/>
           </div>
         </div>
       </div>
