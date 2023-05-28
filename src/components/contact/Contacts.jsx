@@ -1,9 +1,12 @@
+import { useContext } from "react";
+import { ContactContext } from "../../context/ContactContext";
 import { CURRENTLINE, ORANGE, PINK } from "../../helpers/color";
 import { Link } from "react-router-dom";
 import Spinergif from "../Spiner";
 import Contactt from "./Contact";
-// import notFound from '../../assests/noresult.gif'
-const Contact = ({ contacts, loading, confirmDelete }) => {
+
+const Contact = () => {
+  const { loading, contacts, deleteContact } = useContext(ContactContext);
   return (
     <>
       <section className="container">
@@ -32,10 +35,10 @@ const Contact = ({ contacts, loading, confirmDelete }) => {
               contacts.map((c) => (
                 <Contactt
                   key={c.id}
-                  confirmDelete={() => confirmDelete(c.id, c.fullName)}
+                  contactDelete={() => deleteContact(c.id, c.fullName)}
                   contact={c}
                 />
-              ))
+              )) 
             ) : (
               <div
                 className="text-center  py-5"

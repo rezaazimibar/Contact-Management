@@ -1,14 +1,13 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { ContactContext } from "../../context/ContactContext";
 
 import Spinergif from "../Spiner";
 import { COMMENT, GREEN, PURPLE } from "../../helpers/color";
 
-const AddContact = ({
-  loading,
-  contact,
-  setContactInfo,
-  createContactForm,
-  groups}) => {
+const AddContact = () => {
+  const { loading, contact, onContactChange, createContact, groups } =
+    useContext(ContactContext);
   return (
     <>
       {loading ? (
@@ -42,13 +41,13 @@ const AddContact = ({
               <hr style={{ backgroundColor: GREEN }} />
               <div className="row mt-5">
                 <div className="col-md-4">
-                  <form onSubmit={createContactForm}>
+                  <form onSubmit={createContact}>
                     <div className="mb-2">
                       <input
                         name="fullName"
                         type="text"
                         value={contact.fullName}
-                        onChange={setContactInfo}
+                        onChange={onContactChange}
                         className="form-control"
                         placeholder="نام و نام خانوادگی"
                         required={true}
@@ -58,7 +57,7 @@ const AddContact = ({
                       <input
                         name="phot"
                         value={contact.photo}
-                        onChange={setContactInfo}
+                        onChange={onContactChange}
                         type="text"
                         className="form-control"
                         required={true}
@@ -69,7 +68,7 @@ const AddContact = ({
                       <input
                         name="phone"
                         value={contact.number}
-                        onChange={setContactInfo}
+                        onChange={onContactChange}
                         type="number"
                         className="form-control"
                         required={true}
@@ -80,7 +79,7 @@ const AddContact = ({
                       <input
                         type="email"
                         value={contact.email}
-                        onChange={setContactInfo}
+                        onChange={onContactChange}
                         name="email"
                         className="form-control"
                         required={true}
@@ -91,7 +90,7 @@ const AddContact = ({
                       <input
                         type="text"
                         value={contact.job}
-                        onChange={setContactInfo}
+                        onChange={onContactChange}
                         name="job"
                         className="form-control"
                         required={true}
@@ -102,16 +101,23 @@ const AddContact = ({
                       <select
                         value={contact.group}
                         name="group"
-                        onChange={setContactInfo}
+                        onChange={onContactChange}
                         required={true}
                         className="form-control"
                       >
-                        <option value={contact.group} onChange={setContactInfo}>
+                        <option
+                          value={contact.group}
+                          onChange={onContactChange}
+                        >
                           انتخاب گروه
                         </option>
                         {groups.length > 0 &&
                           groups.map((group) => (
-                            <option style={{backgroundColor:PURPLE}} key={group.id} value={group.id}>
+                            <option
+                              style={{ backgroundColor: PURPLE }}
+                              key={group.id}
+                              value={group.id}
+                            >
                               {group.name}
                             </option>
                           ))}

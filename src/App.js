@@ -11,8 +11,6 @@ import {
   deleteContact,
 } from "./components/urlService";
 
-
-
 import {
   AddContact,
   EditContact,
@@ -56,13 +54,20 @@ const App = () => {
   const createContactForm = async (event) => {
     event.preventDefault();
     try {
-      const { status } = await createContact(contact);
+      setLoading((prevLoading) => !prevLoading);
+      const { status, data } = await createContact(contact);
       if (status === 201) {
+        const allContacts = [...contacts, data];
+        setContacts(allContacts);
+        setFilteredContact(allContacts);
+
         setContact({});
+        setLoading((prevLoading) => !prevLoading);
         navigate("/contacts");
       }
     } catch (err) {
       console.log(err.message);
+      setLoading((prevLoading) => !prevLoading);
     }
   };
   const onContactChange = (event) => {
@@ -148,36 +153,15 @@ const App = () => {
         deleteContact: confirmDelete,
         createContact: createContactForm,
         contactSearch,
-
       }}
     >
       {" "}
       <div>
-        <Navbar/>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="contacts" />} />
-          <Route
-            path="/contacts"
-            element={
-              <Contact
-                contacts={filteredContacts}
-                loading={loading}
-                confirmDelete={confirmDelete}
-              />
-            }
-          />
-          <Route
-            path="/contacts/add"
-            element={
-              <AddContact
-                loading={loading}
-                setContactInfo={onContactChange}
-                contact={contact}
-                createContactForm={createContactForm}
-                groups={groups}
-              />
-            }
-          />
+          <Route path="/contacts" element={<Contact />} />
+          <Route path="/contacts/add" element={<AddContact />} />
           <Route
             path="/contacts/:contactId"
             element={<ViewContact loading={loading} />}
