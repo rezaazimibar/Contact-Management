@@ -2,30 +2,21 @@
   "contact": [
     {
       "fullName": "رضا عظیمی",
-      "phot": "https://www.bankinter.com/file_source/nbol/images/Nav/Banca%20personal/fondos_inversion_pers.jpg",
+      "phone": "09193906846",
+      "phot": "https://www.snhu.edu/-/media/images/social/og/personal-growth-plan-og.ashxبیل",
+      "email": "www.beta04@gmail.com",
+      "job": "برنامه نویس",
+      "group": "1",
+      "id": 1
+    },
+    {
+      "fullName": "علی",
+      "phot": "https://www.snhu.edu/-/media/images/social/og/personal-growth-plan-og.ashx",
       "phone": "09193906846",
       "email": "www.rezabeta@gmail.com",
-      "job": "کارمند",
-      "group": "3",
-      "id": 3
-    },
-    {
-      "fullName": "علی پویانی",
-      "phot": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzLv9vYjAbhKg3ghUTD7yzta9fy4mPFhVYiw&usqp=CAU",
-      "phone": "09193906846",
-      "email": "www.beta0@gmail.com",
-      "job": "کارمند",
-      "group": "4",
-      "id": 5
-    },
-    {
-      "fullName": "رضا عظیمی",
-      "phot": "https://www.snhu.edu/-/media/images/social/og/personal-growth-plan-og.ashx",
-      "email": "www.beta04@gmail.com",
-      "phone": "09193906846",
       "job": "برنامه نویس",
-      "group": "5",
-      "id": 6
+      "group": "1",
+      "id": 2
     }
   ],
   "group": [

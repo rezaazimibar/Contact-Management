@@ -1,71 +1,68 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { ContactContext } from "../../context/ContactContext";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { getContact, getAllGroups, updateContact } from "../urlService";
+import { getContact, updateContact } from "../urlService";
 
 import Spinergif from "../Spiner";
 import { COMMENT, ORANGE, PURPLE } from "../../helpers/color";
 
-const EditContact = ({ forceRender, setForceRender }) => {
+const EditContact = () => {
   const { contactId } = useParams();
   const navigate = useNavigate();
-
-  const [state, setState] = useState({
-    loading: false,
-    contact: {
-      name: "",
-      phot: "",
-      phone: "",
-      email: "",
-      group: "",
-    },
-    groups: [],
+  const {
+    contacts,
+    setContacts,
+    setFilteredContacts,
+    loading,
+    groups,
+    setLoading,
+  } = useContext(ContactContext);
+  const [contact, setContact] = useState({
+    contact: {},
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setState({ ...state, loading: true });
+        setLoading(true);
         const { data: contactData } = await getContact(contactId);
-        const { data: groupData } = await getAllGroups();
-        console.log(groupData);
-        setState({
-          ...state,
-          loading: false,
-          contact: contactData,
-          groups: groupData,
-        });
+        setLoading(false);
+        setContact(contactData);
       } catch (err) {
         console.log(err.massage);
-        setState({ ...state, loading: false });
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
-  const setContactUpdate = (event) => {
-    setState({
-      ...state,
-      contact: {
-        ...state.contact,
-        [event.target.name]: event.target.value,
-      },
+  const onContactChange = (event) => {
+    setContact({
+      ...contact,
+      [event.target.name]: event.target.value,
     });
   };
   const submitForm = async (event) => {
     event.preventDefault();
     try {
-      setState({ ...state, loading: true });
-      const { data } = await updateContact(state.contact, contactId);
-      setState({ ...state, loading: false });
-      if (data) {
-        setForceRender(!forceRender);
+      setLoading(true);
+      const { status, data } = await updateContact(contact, contactId);
+      if (status === 200) {
+        setLoading(false);
+
+        const allContacts = [...contacts];
+        const contactIndex = allContacts.findIndex(
+          (c) => c.id === parseInt(contactId)
+        );
+        allContacts[contactIndex] = {...data};
+        setContacts(allContacts);
+        setFilteredContacts(allContacts);
         navigate("/contacts");
       }
     } catch (err) {
       console.log(err.massage);
-      setState({ ...state, loading: false });
+      setLoading(false);
     }
   };
-  const { groups, contact, loading } = state;
   return (
     <>
       {loading ? (
@@ -94,7 +91,7 @@ const EditContact = ({ forceRender, setForceRender }) => {
                         type="text"
                         className="form-control"
                         value={contact.fullName}
-                        onChange={setContactUpdate}
+                        onChange={onContactChange}
                         required={true}
                         placeholder="نام و نام خانوادگی"
                       />
@@ -104,7 +101,7 @@ const EditContact = ({ forceRender, setForceRender }) => {
                         name="phot"
                         type="text"
                         value={contact.phot}
-                        onChange={setContactUpdate}
+                        onChange={onContactChange}
                         className="form-control"
                         required={true}
                         placeholder="آدرس تصویر"
@@ -116,7 +113,7 @@ const EditContact = ({ forceRender, setForceRender }) => {
                         type="number"
                         className="form-control"
                         value={contact.phone}
-                        onChange={setContactUpdate}
+                        onChange={onContactChange}
                         required={true}
                         placeholder="شماره موبایل"
                       />
@@ -127,7 +124,7 @@ const EditContact = ({ forceRender, setForceRender }) => {
                         type="email"
                         className="form-control"
                         value={contact.email}
-                        onChange={setContactUpdate}
+                        onChange={onContactChange}
                         required={true}
                         placeholder="آدرس ایمیل"
                       />
@@ -138,7 +135,7 @@ const EditContact = ({ forceRender, setForceRender }) => {
                         type="text"
                         className="form-control"
                         value={contact.job}
-                        onChange={setContactUpdate}
+                        onChange={onContactChange}
                         required={true}
                         placeholder="شغل"
                       />
@@ -148,7 +145,7 @@ const EditContact = ({ forceRender, setForceRender }) => {
                         style={{ color: PURPLE }}
                         name="group"
                         value={contact.group}
-                        onChange={setContactUpdate}
+                        onChange={onContactChange}
                         required={true}
                         className="form-control"
                       >
@@ -197,7 +194,7 @@ const EditContact = ({ forceRender, setForceRender }) => {
 
             <div className="text-center mt-1">
               <img
-              alt="not found"
+                alt="not found"
                 src={require("../../assests/manNoting.png")}
                 height="300px"
                 style={{ opacity: "60%" }}

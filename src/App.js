@@ -30,7 +30,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [contacts, setContacts] = useState([]);
   const [groups, setGroups] = useState([]);
-  const [filteredContacts, setFilteredContact] = useState([]);
+  const [filteredContacts, setFilteredContacts] = useState([]);
   const [contactQuery, setContactQuery] = useState({ text: "" });
   const [contact, setContact] = useState({});
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const App = () => {
         const { data: contactData } = await getAllContacts();
         const { data: groupData } = await getAllGroups();
         setContacts(contactData);
-        setFilteredContact(contactData);
+        setFilteredContacts(contactData);
         setGroups(groupData);
         setLoading(false);
       } catch (err) {
@@ -59,7 +59,7 @@ const App = () => {
       if (status === 201) {
         const allContacts = [...contacts, data];
         setContacts(allContacts);
-        setFilteredContact(allContacts);
+        setFilteredContacts(allContacts);
 
         setContact({});
         setLoading((prevLoading) => !prevLoading);
@@ -115,18 +115,21 @@ const App = () => {
       },
     });
   };
+  const allContacts = [...contacts];
   const removeContact = async (contactId) => {
     try {
-      setLoading(true);
-      const response = await deleteContact(contactId);
-      if (response) {
-        const { data: contactsData } = await getAllContacts();
-        setContact(contactsData);
-        setLoading(false);
+      const updatedContact = contacts.filter((c) => c.id !== contactId);
+      setContacts(updatedContact);
+      setFilteredContacts(updatedContact);
+      const { status } = await deleteContact(contactId);
+      if (status !== 200) {
+        setContacts(allContacts);
+        setFilteredContacts(allContacts);
       }
     } catch (err) {
       console.log(err.message);
-      setLoading(false);
+      setContacts(allContacts);
+      setFilteredContacts(allContacts);
     }
   };
   const contactSearch = (event) => {
@@ -136,7 +139,7 @@ const App = () => {
         .toLowerCase()
         .includes(event.target.value.toLowerCase());
     });
-    setFilteredContact(allContacts);
+    setFilteredContacts(allContacts);
   };
   return (
     <ContactContext.Provider
@@ -144,12 +147,13 @@ const App = () => {
         loading,
         setLoading,
         contact,
-        setContact,
+        setContacts,
         contactQuery,
         contacts,
-        filteredContacts,
         groups,
+        filteredContacts,
         onContactChange,
+        setFilteredContacts,
         deleteContact: confirmDelete,
         createContact: createContactForm,
         contactSearch,
@@ -162,10 +166,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="contacts" />} />
           <Route path="/contacts" element={<Contact />} />
           <Route path="/contacts/add" element={<AddContact />} />
-          <Route
-            path="/contacts/:contactId"
-            element={<ViewContact loading={loading} />}
-          />
+          <Route path="/contacts/:contactId" element={<ViewContact />} />
           <Route path="/contacts/edit/:contactId" element={<EditContact />} />
         </Routes>
       </div>

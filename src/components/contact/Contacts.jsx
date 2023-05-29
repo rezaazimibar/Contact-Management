@@ -6,7 +6,7 @@ import Spinergif from "../Spiner";
 import Contactt from "./Contact";
 
 const Contact = () => {
-  const { loading, contacts, deleteContact } = useContext(ContactContext);
+  const { loading, filteredContacts, deleteContact } = useContext(ContactContext);
   return (
     <>
       <section className="container">
@@ -31,8 +31,8 @@ const Contact = () => {
       ) : (
         <section className="container">
           <div className="row">
-            {contacts.length > 0 ? (
-              contacts.map((c) => (
+            {filteredContacts.length > 0 ? (
+              filteredContacts.map((c) => (
                 <Contactt
                   key={c.id}
                   contactDelete={() => deleteContact(c.id, c.fullName)}
