@@ -1,8 +1,8 @@
 import "./App.css";
 import { confirmAlert } from "react-confirm-alert";
 import { ContactContext } from "./context/ContactContext.js";
-
-import { useState, useEffect } from "react";
+import { useImmer } from "use-immer";
+import {  useEffect } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import {
   createContact,
@@ -27,12 +27,11 @@ import {
 } from "./helpers/color";
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-  const [contacts, setContacts] = useState([]);
-  const [groups, setGroups] = useState([]);
-  const [filteredContacts, setFilteredContacts] = useState([]);
-  const [contactQuery, setContactQuery] = useState({ text: "" });
-  const [contact, setContact] = useState({});
+  const [loading, setLoading] = useImmer(false);
+  const [contacts, setContacts] = useImmer([]);
+  const [groups, setGroups] = useImmer([]);
+  const [filteredContacts, setFilteredContacts] = useImmer([]);
+  const [contact, setContact] = useImmer({});
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
@@ -57,9 +56,12 @@ const App = () => {
       setLoading((prevLoading) => !prevLoading);
       const { status, data } = await createContact(contact);
       if (status === 201) {
-        const allContacts = [...contacts, data];
-        setContacts(allContacts);
-        setFilteredContacts(allContacts);
+        setContacts((draft) => {
+          draft.push(data);
+        });
+        setFilteredContacts((draft) => {
+          draft.push(data);
+        });
 
         setContact({});
         setLoading((prevLoading) => !prevLoading);
@@ -118,9 +120,12 @@ const App = () => {
   const allContacts = [...contacts];
   const removeContact = async (contactId) => {
     try {
-      const updatedContact = contacts.filter((c) => c.id !== contactId);
-      setContacts(updatedContact);
-      setFilteredContacts(updatedContact);
+      setContacts((draft) => {
+        draft.filter((c) => c.id !== contactId);
+      });
+      setFilteredContacts((draft) => {
+        draft.filter((c) => c.id !== contactId);
+      });
       const { status } = await deleteContact(contactId);
       if (status !== 200) {
         setContacts(allContacts);
@@ -132,13 +137,23 @@ const App = () => {
       setFilteredContacts(allContacts);
     }
   };
-  const contactSearch = (event) => {
-    setContactQuery({ ...contactQuery, text: event.target.value });
-    const allContacts = contacts.filter((contacts) => {
-      return contacts.fullName
-        .toLowerCase()
-        .includes(event.target.value.toLowerCase());
-    });
+  let filterTimeout;
+  const contactSearch = (query) => {
+    clearTimeout(filterTimeout);
+
+    if (!query) return setFilteredContacts([...contacts]);
+
+    filterTimeout = setTimeout(() => {
+      setFilteredContacts(
+        contacts.filter((contacts) => {
+          return contacts.fullName.toLowerCase().includes(query.toLowerCase());
+        })
+      );
+      setFilteredContacts((draft) =>
+        draft.filter(c=>c.fullName.toLowerCase().includes(query.toLowerCase()))
+      );
+    }, 1000);
+
     setFilteredContacts(allContacts);
   };
   return (
@@ -148,7 +163,6 @@ const App = () => {
         setLoading,
         contact,
         setContacts,
-        contactQuery,
         contacts,
         groups,
         filteredContacts,

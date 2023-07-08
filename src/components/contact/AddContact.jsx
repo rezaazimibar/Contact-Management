@@ -142,7 +142,6 @@ const AddContact = () => {
                 </div>
               </div>
             </div>
-            {console.log(contact)}
           </section>
         </>
       )}
